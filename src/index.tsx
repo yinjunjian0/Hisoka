@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import 'antd/dist/antd.css';
+
+import Layout from './layout';
 import * as serviceWorker from './serviceWorker';
 
+import { storeContext, initialState, reducer } from './store'
+
+function Provider({ children, store }: any) {
+  return <storeContext.Provider value={store}>
+    {children}
+  </storeContext.Provider>
+}
+
+function App({ children }: any) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <Provider store={{ state, dispatch }}>
+      {children}
+    </Provider>
+  );
+}
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <App>
+    <Layout />
+  </App>,
   document.getElementById('root')
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
