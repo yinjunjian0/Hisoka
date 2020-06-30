@@ -12,7 +12,7 @@ const layout = {
 };
 
 const MainForm = () => {
-  const { state, dispatch } = useContext(storeContext);
+  const { state } = useContext(storeContext);
   const { fields } = state
 
   const onFinish = (values: Object) => {
@@ -28,14 +28,15 @@ const MainForm = () => {
           label={item.name}
           rules={[
             {
-              required: item?.config?.required || false,
+              required: item?.required || false,
             },
           ]}
+
         >
-          {item?.config.type == 'Input' && <Input />}
-          {item?.config.type == 'Select' && <Select />}
-          {item?.config.type == 'Checkbox' && <Checkbox />}
-          {item?.config.type == 'Switch' && <Switch />}
+          {item?.type === 'Input' && <Input {...item} />}
+          {item?.type === 'Select' && <Select {...item} />}
+          {item?.type === 'Checkbox' && <Checkbox  {...item} />}
+          {item?.type === 'Switch' && <Switch {...item} />}
         </Form.Item>
       )}
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>

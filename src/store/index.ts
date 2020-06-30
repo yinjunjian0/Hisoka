@@ -8,7 +8,8 @@ interface fieldConfig {
 
 export interface fieldItem {
   name: string,
-  config?: fieldConfig
+  required?: Boolean,
+  type?: string
 }
 
 export interface IState {
@@ -27,7 +28,7 @@ const { get, set } = useCache()
 
 
 const cacheStore = get('store')
-export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [{ name: 'field1' }] }
+export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [{ name: 'field1', type: 'Input' }] }
 
 export const reducer = (state: IState, action: { type: string, payload: { loading: Boolean, name: string } }) => {
   switch (action.type) {

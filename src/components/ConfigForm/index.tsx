@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useCallback } from 'react'
 import {
   Form,
   Input,
@@ -11,10 +11,10 @@ import { storeContext } from '../../store'
 
 const layout = {
   labelCol: {
-    span: 4,
+    span: 6,
   },
   wrapperCol: {
-    span: 20,
+    span: 18,
   },
 };
 
@@ -22,19 +22,16 @@ const ConfigForm = () => {
   const [form] = Form.useForm();
   const { state, dispatch } = useContext(storeContext);
   const { selectedTag } = state
-  const { config } = selectedTag
+
+  const onFill = useCallback(() => {
+    console.log('selectedTag', selectedTag);
+    form.setFieldsValue(selectedTag);
+  }, [selectedTag, form])
 
   useEffect(() => {
     onFill()
-  }, [config])
+  }, [selectedTag, onFill])
 
-  const onFill = () => {
-    console.log('config', config);
-
-    form.setFieldsValue({
-      config
-    });
-  };
 
   const onValuesChange = (values: Object) => {
     dispatch({ type: "SETLOADING", payload: { loading: true } })
@@ -44,7 +41,7 @@ const ConfigForm = () => {
   return (
     <Form {...layout} name="nest-messages" form={form} onValuesChange={onValuesChange} style={{ color: '#FFF' }}>
       <Form.Item
-        name={['config', 'required']}
+        name={['required']}
         valuePropName="checked"
         label="必填"
       // rules={[
@@ -53,9 +50,14 @@ const ConfigForm = () => {
       >
         <Checkbox />
       </Form.Item>
-
       <Form.Item
-        name={['config', 'type']}
+        name={['placeholder']}
+        label="placeholder"
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name={['type']}
         label="类型"
         rules={[
           {

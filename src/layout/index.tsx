@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Layout, Spin } from 'antd';
+import React, { useState, } from 'react';
+import { Layout, } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -8,16 +8,12 @@ import {
 import Form from '../components/Form'
 import ConfigForm from '../components/ConfigForm'
 import Tags from '../components/ColumnTags'
-import { LoadingOutlined, CheckCircleTwoTone } from '@ant-design/icons';
-import { storeContext } from '../store'
+import { CheckCircleTwoTone } from '@ant-design/icons';
 
-const antIcon = <LoadingOutlined style={{ fontSize: 10 }} spin />;
 const { Header, Sider, Content } = Layout;
 
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false)
-  const { state, dispatch } = useContext(storeContext);
-  const { loading } = state
 
   const toggle = () => {
     setCollapsed(!collapsed)
