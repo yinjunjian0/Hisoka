@@ -5,6 +5,7 @@ import {
   Button,
   Radio,
   Checkbox,
+  Tag
 } from 'antd';
 import { storeContext } from '../../store'
 
@@ -24,7 +25,7 @@ const ConfigForm = () => {
   const { selectedTag } = state
 
   const onFill = useCallback(() => {
-    console.log('selectedTag', selectedTag);
+    form.resetFields()
     form.setFieldsValue(selectedTag);
   }, [selectedTag, form])
 
@@ -34,49 +35,26 @@ const ConfigForm = () => {
 
 
   const onValuesChange = (values: Object) => {
-    dispatch({ type: "SETLOADING", payload: { loading: true } })
+    console.log(values);
     dispatch({ type: "SETFIELD", payload: { ...values } })
   };
 
   return (
     <Form {...layout} name="nest-messages" form={form} onValuesChange={onValuesChange} style={{ color: '#FFF' }}>
       <Form.Item
-        name={['required']}
-        valuePropName="checked"
-        label="必填"
-      // rules={[
-      //   { validator: (_, value) => value ? Promise.resolve() : Promise.reject('请选择') },
-      // ]}
-      >
-        <Checkbox />
-      </Form.Item>
-      <Form.Item
-        name={['placeholder']}
+        name={['itemProps', 'placeholder']}
         label="placeholder"
       >
         <Input />
       </Form.Item>
       <Form.Item
-        name={['type']}
-        label="类型"
-        rules={[
-          {
-            required: true,
-            message: '选个类型'
-          },
-        ]}
+        name={['itemProps', 'customoptions']}
+        label="options"
       >
-        <Radio.Group>
-          <Radio value="Input">Input</Radio>
-          <Radio value="Select">Select</Radio>
-          <Radio value="Checkbox">Checkbox</Radio>
-          <Radio value="Switch">Switch</Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
+        <Checkbox.Group>
+          <Checkbox value="A" style={{ lineHeight: '32px' }}>A</Checkbox>
+          <Checkbox value="C" style={{ lineHeight: '32px' }}>C</Checkbox>
+        </Checkbox.Group>
       </Form.Item>
     </Form>
   );

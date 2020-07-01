@@ -1,19 +1,25 @@
 import React, { useState, } from 'react';
-import { Layout, } from 'antd';
+import { Layout, Button, Input, Collapse } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons';
 
-import Form from '../components/Form'
-import ConfigForm from '../components/ConfigForm'
-import Tags from '../components/ColumnTags'
+
 import { CheckCircleTwoTone } from '@ant-design/icons';
 
+import Form from '../components/Form'
+import BasicConfigForm from '../components/BasicConfigForm'
+import ComponentConfigForm from '../components/ComponentConfigForm'
+import Tags from '../components/ColumnTags'
+import EnvDrawer from './component/EnvDrawer'
+
+const { Panel } = Collapse;
 const { Header, Sider, Content } = Layout;
 
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false)
+  const [envDrawerVis, setEnvDrawerVis] = useState(false)
 
   const toggle = () => {
     setCollapsed(!collapsed)
@@ -21,19 +27,28 @@ function MainLayout() {
 
   return (
     <Layout className="mainLayout">
+      <EnvDrawer envDrawerVis={envDrawerVis} setEnvDrawerVis={setEnvDrawerVis}></EnvDrawer>
       <Sider trigger={null} collapsible collapsedWidth={300} collapsed={collapsed} className="pad20" width={'40%'} style={{ background: "#FFF" }}>
         <div className="column">
           <h2>Hisoka</h2>
-          <div className="flex bt pad10">
-            <div></div>
+          <div className="flex bt ptb10 aic">
+            <div>
+              <Button type="primary" onClick={() => setEnvDrawerVis(true)} size="small">设置环境变量</Button>
+            </div>
             {<div className="aic" style={{ fontSize: 14 }}>
               模板数据将自动缓存到本地浏览器 <CheckCircleTwoTone style={{ marginLeft: 10 }} />
             </div>}
-
           </div>
           <Tags />
           <div className="mt10"></div>
-          <ConfigForm />
+          <Collapse defaultActiveKey={['1']} onChange={e => e}>
+            <Panel header="基本信息" key="1">
+              <BasicConfigForm />
+            </Panel>
+            <Panel header="组件配置" key="2">
+              <ComponentConfigForm />
+            </Panel>
+          </Collapse>
         </div>
       </Sider>
       <Layout className="site-layout">
@@ -54,7 +69,7 @@ function MainLayout() {
           <Form />
         </Content>
       </Layout>
-    </Layout>
+    </Layout >
   );
 }
 

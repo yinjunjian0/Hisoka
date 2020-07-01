@@ -6,16 +6,29 @@ interface fieldConfig {
   type?: string
 }
 
+interface itemPropsType {
+  placeholder?: string,
+  [propertys: string]: any
+}
+
 export interface fieldItem {
+  id: number,
+  label: string,
   name: string,
   required?: Boolean,
-  type?: string
+  type?: string,
+  itemProps: itemPropsType
+}
+
+interface evnProps {
+  [propertys: string]: any
 }
 
 export interface IState {
   fields: Array<fieldItem>,
   loading: Boolean,
-  selectedTag: fieldItem
+  selectedTag: fieldItem,
+  env: evnProps
 }
 
 export interface IContextProps {
@@ -26,15 +39,27 @@ export const storeContext = React.createContext({} as IContextProps);
 
 const { get, set } = useCache()
 
-
 const cacheStore = get('store')
-export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [{ name: 'field1', type: 'Input' }] }
+export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [{ id: 1, name: 'field1', type: 'Input', env: {} }] }
 
-export const reducer = (state: IState, action: { type: string, payload: { loading: Boolean, name: string } }) => {
+const initFiledItem = {
+  name: `new Field${+new Date()}`,
+  type: 'Input',
+  label: 'toEdit',
+  required: true,
+  itemProps: {}
+}
+
+export const reducer = (state: IState, action: { type: string, payload: { id: number, loading: Boolean, name: string, env: evnProps } }) => {
   switch (action.type) {
+    case "SETENV":
+      const env = action.payload.env
+      set('store', state)
+      return { ...state, env }
     case "SETSELECTEDTAG":
-      const selectedField = state.fields.filter(item => item.name === action.payload.name)
+      const selectedField = state.fields.filter(item => item.id === action.payload.id)
       state.selectedTag = selectedField[0]
+      set('store', state)
       return { ...initialState, ...state }
     case 'SETLOADING':
       state.loading = action.payload.loading
@@ -44,14 +69,16 @@ export const reducer = (state: IState, action: { type: string, payload: { loadin
       const { fields, selectedTag } = state
       const payload = action.payload
       for (let i = 0; i < fields.length; i++) {
-        if (fields[i].name === selectedTag.name) fieldIndex = i
+        if (fields[i].id === selectedTag.id) fieldIndex = i
       }
       fields[fieldIndex] = { ...fields[fieldIndex], ...payload }
       set('store', state)
       state.loading = false
       return { ...initialState, ...state }
     case 'ADDFIELD':
-      state.fields = [...state.fields, { name: action.payload.name }]
+      let newId;
+      newId = (state.fields.length !== 0) ? (state.fields[state.fields.length - 1].id + 1) : 1
+      state.fields = [...state.fields, { ...initFiledItem, id: newId, name: action.payload.name, }]
       set('store', state)
       return { ...initialState, ...state }
     case 'DELETEFIELD':

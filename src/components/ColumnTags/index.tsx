@@ -40,7 +40,7 @@ function ColumnTags() {
   return <div>
     {fields.map((item: fieldItem, index) => (
       <Popconfirm
-        key={index}
+        key={item.id}
         title="删除此元素"
         onConfirm={() => confirm(item.name)}
         okText="是"
@@ -48,12 +48,13 @@ function ColumnTags() {
         trigger={'hover'}
       >
         <CheckableTag
-          checked={item.name === selectedTag.name}
+          checked={item.id === selectedTag.id}
           onChange={checked => {
-            dispatch({ type: "SETSELECTEDTAG", payload: { name: item.name } })
+            dispatch({ type: "SETSELECTEDTAG", payload: { id: item.id } })
           }}
+          style={{ marginBottom: 10 }}
         >
-          {item.name}
+          {item.label}({item.name})
         </CheckableTag>
       </Popconfirm>
     ))}
