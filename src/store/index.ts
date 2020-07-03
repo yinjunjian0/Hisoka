@@ -11,6 +11,19 @@ interface itemPropsType {
   [propertys: string]: any
 }
 
+interface evnProps {
+  [propertys: string]: any
+}
+
+interface layoutProps {
+  [propertys: string]: any
+}
+
+interface IContextProps {
+  state: IState;
+  dispatch: ({ type, payload }: { type: string, payload: Object }) => void;
+}
+
 export interface fieldItem {
   id: number,
   label: string,
@@ -20,28 +33,18 @@ export interface fieldItem {
   itemProps: itemPropsType
 }
 
-interface evnProps {
-  [propertys: string]: any
-}
-
 export interface IState {
   fields: Array<fieldItem>,
   loading: Boolean,
   selectedTag: fieldItem,
-  env: evnProps
+  env: evnProps,
+  layout: layoutProps
 }
 
-export interface IContextProps {
-  state: IState;
-  dispatch: ({ type, payload }: { type: string, payload: Object }) => void;
-}
 export const storeContext = React.createContext({} as IContextProps);
 
 const { get, set } = useCache()
-
 const cacheStore = get('store')
-export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [{ id: 1, name: 'field1', type: 'Input', env: {} }] }
-
 const initFiledItem = {
   name: `new Field${+new Date()}`,
   type: 'Input',
@@ -50,10 +53,18 @@ const initFiledItem = {
   itemProps: {}
 }
 
-export const reducer = (state: IState, action: { type: string, payload: { id: number, loading: Boolean, name: string, env: evnProps } }) => {
+export const initialState: IState = cacheStore ? cacheStore : { selectedTag: {}, loading: false, fields: [initFiledItem], env: {}, layout: {} }
+
+export const reducer = (state: IState, action: { type: string, payload: { id: number, loading: Boolean, name: string, env: evnProps, layout: layoutProps } }) => {
   switch (action.type) {
+    case "SETLAYOUT":
+      const layout = action.payload.layout
+      state.layout = { ...state.layout, ...layout }
+      set('store', state)
+      return { ...state }
     case "SETENV":
       const env = action.payload.env
+      state.env = env
       set('store', state)
       return { ...state, env }
     case "SETSELECTEDTAG":

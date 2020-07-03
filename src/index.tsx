@@ -7,12 +7,7 @@ import Layout from './layout';
 import * as serviceWorker from './serviceWorker';
 
 import { storeContext, initialState, reducer } from './store'
-
-function Provider({ children, store }: any) {
-  return <storeContext.Provider value={store}>
-    {children}
-  </storeContext.Provider>
-}
+import Provider from './store/Provider'
 
 function App({ children }: any) {
   const [state, dispatch] = useReducer(reducer, initialState);

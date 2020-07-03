@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Form, Input, Button, Select, Checkbox, Switch, Radio } from 'antd';
-import { storeContext } from '../../store'
+import { storeContext } from '../store'
 
 
 const MainForm = () => {

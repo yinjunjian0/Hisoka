@@ -10,16 +10,20 @@ interface envDrawerProps {
 
 const EnvDrawer = ({ envDrawerVis, setEnvDrawerVis }: envDrawerProps) => {
   const { state, dispatch } = useContext(storeContext);
-  const [envVar, setEnvVar] = useState(`{"name":"fat cat"}`)
+  const [envVar, setEnvVar] = useState(JSON.stringify({
+    name: 'fat cat'
+  }, null, 4))
 
   const EnvDrawerTop = () => <div className="flex bt">
     <Button type="primary" onClick={() => {
       const formattedJson = formatJson(envVar)
+      console.log('formattedJson', formattedJson);
+
       if (!formattedJson) {
         message.error('格式错误，请使用JSON格式')
         return
       }
-      setEnvVar(formatJson(formattedJson))
+      setEnvVar((formattedJson))
     }} size="small">格式化</Button><Button type="primary" onClick={() => {
       if (isJson(envVar)) {
         const env = JSON.parse(envVar)
